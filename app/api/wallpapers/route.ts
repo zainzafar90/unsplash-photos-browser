@@ -42,7 +42,6 @@ export async function POST(request: Request) {
     const data = await fs.readFile(WALLPAPERS_FILE, "utf-8");
     const { wallpapers } = JSON.parse(data);
 
-    // Check if wallpaper already exists
     if (!wallpapers.some((w: Wallpaper) => w.id === processedWallpaper.id)) {
       wallpapers.push(processedWallpaper);
       await fs.writeFile(
