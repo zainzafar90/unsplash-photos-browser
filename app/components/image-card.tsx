@@ -25,7 +25,7 @@ type ImageCardProps = {
   onLike?: () => void;
 };
 
-export default function ImageCard({ photo, isLiked }: ImageCardProps) {
+export function ImageCard({ photo, isLiked }: ImageCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {

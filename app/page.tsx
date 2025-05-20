@@ -1,5 +1,4 @@
-import Link from "next/link";
-import PhotoGallery from "./components/photo-gallery";
+import { PageContent } from "./components/page-content";
 
 function parseLinkHeader(header: string) {
   return header.split(",").reduce<Record<string, string>>((acc, part) => {
@@ -40,23 +39,11 @@ export default async function Page(props: {
   const wallpapersData = await wallpapers.json();
 
   return (
-    <div className="p-4">
-      <PhotoGallery
-        photos={data.results}
-        wallpapers={wallpapersData.wallpapers}
-      />
-      <div className="flex justify-between mt-6 max-w-sm mx-auto">
-        {getPage(links.prev) ? (
-          <Link href={`/?page=${getPage(links.prev)}`}>← Prev</Link>
-        ) : (
-          <a className="text-gray-400 inline-flex">← Prev</a>
-        )}
-        {getPage(links.next) ? (
-          <Link href={`/?page=${getPage(links.next)}`}>Next →</Link>
-        ) : (
-          <a className="text-gray-400 inline-flex">Next →</a>
-        )}
-      </div>
-    </div>
+    <PageContent
+      initialPhotos={data.results}
+      initialWallpapers={wallpapersData.wallpapers}
+      prevPage={getPage(links.prev)}
+      nextPage={getPage(links.next)}
+    />
   );
 }

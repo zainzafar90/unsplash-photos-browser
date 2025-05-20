@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ImageCard from "./image-card";
+import { ImageCard } from "./image-card";
 
 type Photo = {
   id: string;
@@ -18,11 +18,13 @@ type Wallpaper = {
 type PhotoGalleryProps = {
   photos: Photo[];
   wallpapers: Wallpaper[];
+  isLoading?: boolean;
 };
 
-export default function PhotoGallery({
+export function PhotoGallery({
   photos,
   wallpapers,
+  isLoading = false,
 }: PhotoGalleryProps) {
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -31,22 +33,49 @@ export default function PhotoGallery({
     setLikedIds(new Set(wallpapers.map((w: Wallpaper) => w.id)));
   }, [wallpapers]);
 
-  const handleLike = (id: string) => {
+  const handleLike = async (id: string) => {
     setLikedIds((prev) => new Set(prev).add(id));
+
+    try {
+      const baseUrl = window.location.origin;
+      await fetch(`${baseUrl}/api/wallpapers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          type: "unsplash",
+          url: photos.find((p) => p.id === id)?.urls.raw,
+          title: photos.find((p) => p.id === id)?.alt_description || "Untitled",
+          thumbnail: photos.find((p) => p.id === id)?.urls.small,
+          blurhash: photos.find((p) => p.id === id)?.blur_hash || "",
+          author: photos.find((p) => p.id === id)?.user.name,
+          source: `https://unsplash.com/photos/${id}`,
+        }),
+      });
+    } catch (error) {
+      setLikedIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+      console.error("Failed to save wallpaper:", error);
+    }
   };
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4">
+      <div
+        className={`grid grid-cols-3 gap-4 ${isLoading ? "opacity-50" : ""}`}
+      >
         {photos.map((p) => (
           <div key={p.id} className="relative group">
-            <a href={p.urls.raw} target="_blank" rel="noopener noreferrer">
-              <ImageCard
-                photo={p}
-                isLiked={likedIds.has(p.id)}
-                onLike={() => handleLike(p.id)}
-              />
-            </a>
+            <ImageCard
+              photo={p}
+              isLiked={likedIds.has(p.id)}
+              onLike={() => handleLike(p.id)}
+            />
           </div>
         ))}
       </div>
