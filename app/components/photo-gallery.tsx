@@ -72,7 +72,7 @@ export function PhotoGallery({
         {photos.map((p) => (
           <div key={p.id} className="relative group">
             <ImageCard
-              photo={{ ...p, urls: { ...p.urls, thumbnail: p.urls.regular } }}
+              photo={p}
               isLiked={likedIds.has(p.id)}
               onLike={() => handleLike(p.id)}
             />
@@ -103,7 +103,7 @@ export function PhotoGallery({
               <img
                 src={selectedPhoto.urls.raw}
                 alt={selectedPhoto.alt_description || "Photo"}
-                className="object-contain w-full h-full"
+                className="object-contain w-full h-full transition-transform duration-300 hover:scale-105"
               />
             </div>
           </div>

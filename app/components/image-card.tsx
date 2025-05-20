@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Eye, Heart } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
@@ -52,13 +51,14 @@ export function ImageCard({ photo, isLiked, onLike }: ImageCardProps) {
         rel="noopener noreferrer"
         className="block overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105 bg-black"
       >
-        <Image
+        <img
           src={photo.urls.regular}
+          srcSet={`${photo.urls.small} 400w, ${photo.urls.regular} 1080w, ${photo.urls.raw} 1920w`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           alt={photo.alt_description ?? ""}
           width={600}
           height={400}
           className="w-full h-56 object-cover rounded-2xl transition-transform duration-300 group-hover:scale-110"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent text-white p-4 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity">
           <p className="text-base font-semibold">Photo by {photo.user.name}</p>
