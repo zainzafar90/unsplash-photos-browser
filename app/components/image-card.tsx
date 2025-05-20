@@ -53,7 +53,7 @@ export function ImageCard({ photo, isLiked, onLike }: ImageCardProps) {
       >
         <img
           src={photo.urls.regular}
-          srcSet={`${photo.urls.small} 400w, ${photo.urls.regular} 1080w, ${photo.urls.raw} 1920w`}
+          srcSet={`${photo.urls.small} 400w, ${photo.urls.regular} 500w`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           alt={photo.alt_description ?? ""}
           width={600}
