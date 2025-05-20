@@ -5,7 +5,7 @@ import { ImageCard } from "./image-card";
 
 type Photo = {
   id: string;
-  urls: { small: string; raw: string };
+  urls: { small: string; regular: string; raw: string };
   alt_description: string | null;
   blur_hash?: string;
   user: { name: string; username: string };
@@ -48,7 +48,7 @@ export function PhotoGallery({
           type: "unsplash",
           url: photos.find((p) => p.id === id)?.urls.raw,
           title: photos.find((p) => p.id === id)?.alt_description || "Untitled",
-          thumbnail: photos.find((p) => p.id === id)?.urls.small,
+          thumbnail: photos.find((p) => p.id === id)?.urls.regular,
           blurhash: photos.find((p) => p.id === id)?.blur_hash || "",
           author: photos.find((p) => p.id === id)?.user.name,
           source: `https://unsplash.com/photos/${id}`,
@@ -72,7 +72,7 @@ export function PhotoGallery({
         {photos.map((p) => (
           <div key={p.id} className="relative group">
             <ImageCard
-              photo={p}
+              photo={{ ...p, urls: { ...p.urls, thumbnail: p.urls.regular } }}
               isLiked={likedIds.has(p.id)}
               onLike={() => handleLike(p.id)}
             />

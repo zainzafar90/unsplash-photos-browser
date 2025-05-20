@@ -34,12 +34,14 @@ export function PageContent({
 
   const handlePageChange = async (page: number) => {
     setIsLoading(true);
+    const currentPhotos = photos;
     try {
       const res = await fetch(`/api/photos?page=${page}`);
       const data = await res.json();
       setPhotos(data.results);
     } catch (error) {
       console.error("Failed to fetch photos:", error);
+      setPhotos(currentPhotos);
     } finally {
       setIsLoading(false);
     }
