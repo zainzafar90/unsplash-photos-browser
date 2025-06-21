@@ -9,14 +9,16 @@ function parseLinkHeader(header: string) {
 }
 
 export default async function Page(props: {
-  searchParams: { page?: string; query?: string };
+  searchParams: { page?: string; query?: string; per_page?: string };
 }) {
   const searchParams = await props.searchParams;
   const pageNum = parseInt(searchParams.page || "1", 10);
-  const perPage = 50;
+  const parsedPerPage = parseInt(searchParams.per_page || "30", 10);
+  const perPage = Math.min(30, Math.max(1, isNaN(parsedPerPage) ? 30 : parsedPerPage));
   const query =
     searchParams.query ||
     "bright alpine meadow with mountain backdrop no structures";
+  console.log('Page params:', { page: pageNum, perPage, query });
 
   try {
     const res = await fetch(
@@ -67,6 +69,7 @@ export default async function Page(props: {
           prevPage={getPage(links.prev)}
           nextPage={getPage(links.next)}
           query={query}
+          perPage={perPage}
         />
       </div>
     );
@@ -79,6 +82,7 @@ export default async function Page(props: {
           initialPhotos={[]}
           initialWallpapers={[]}
           query={query}
+          perPage={perPage}
           error={
             error instanceof Error ? error.message : "Failed to load photos"
           }

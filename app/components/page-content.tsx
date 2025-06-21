@@ -22,6 +22,7 @@ type PageContentProps = {
   prevPage?: number;
   nextPage?: number;
   query?: string;
+  perPage?: number;
   error?: string;
 };
 
@@ -31,6 +32,7 @@ export function PageContent({
   prevPage,
   nextPage,
   query,
+  perPage,
   error,
 }: PageContentProps) {
   const [photos, setPhotos] = useState(initialPhotos);
@@ -41,7 +43,8 @@ export function PageContent({
     const currentPhotos = photos;
     try {
       const queryParam = query ? `&query=${encodeURIComponent(query)}` : '';
-      const res = await fetch(`/api/photos?page=${page}${queryParam}`);
+      const perPageParam = perPage ? `&per_page=${perPage}` : '';
+      const res = await fetch(`/api/photos?page=${page}${queryParam}${perPageParam}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -77,7 +80,7 @@ export function PageContent({
       <div className="flex justify-between mt-6 max-w-sm mx-auto">
         {prevPage ? (
           <Link
-            href={`/?page=${prevPage}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
+            href={`/?page=${prevPage}${query ? `&query=${encodeURIComponent(query)}` : ''}${perPage ? `&per_page=${perPage}` : ''}`}
             onClick={() => handlePageChange(prevPage)}
             className={isLoading ? "opacity-50 pointer-events-none" : ""}
           >
@@ -88,7 +91,7 @@ export function PageContent({
         )}
         {nextPage ? (
           <Link
-            href={`/?page=${nextPage}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
+            href={`/?page=${nextPage}${query ? `&query=${encodeURIComponent(query)}` : ''}${perPage ? `&per_page=${perPage}` : ''}`}
             onClick={() => handlePageChange(nextPage)}
             className={isLoading ? "opacity-50 pointer-events-none" : ""}
           >
