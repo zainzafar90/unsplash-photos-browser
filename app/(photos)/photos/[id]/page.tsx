@@ -22,5 +22,8 @@ export default async function Page({
 
   const photo = await res.json();
 
-  return <PhotoDetails photo={photo} />;
+  const wallpapers = await fetch(`${baseUrl}/api/wallpapers`);
+  const wallpapersData = await wallpapers.json();
+
+  return <PhotoDetails photo={photo} wallpapersCount={wallpapersData.wallpapers.length} />;
 }
