@@ -19,7 +19,7 @@ export default async function Page(props: {
     Math.max(1, isNaN(parsedPerPage) ? 30 : parsedPerPage)
   );
   const query =
-    searchParams.query || "vibrant aerial mountain valley sunrise no people";
+    searchParams.query || "vibrant empty park pathway morning light no people";
   console.log("Page params:", { page: pageNum, perPage, query });
 
   try {
