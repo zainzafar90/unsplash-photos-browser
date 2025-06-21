@@ -22,7 +22,13 @@ type Photo = {
   } | null;
 };
 
-export default function PhotoDetails({ photo, wallpapersCount }: { photo: Photo; wallpapersCount: number }) {
+export default function PhotoDetails({
+  photo,
+  wallpapersCount,
+}: {
+  photo: Photo;
+  wallpapersCount: number;
+}) {
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : "http://localhost:3001";
@@ -63,7 +69,7 @@ export default function PhotoDetails({ photo, wallpapersCount }: { photo: Photo;
     );
 
   return (
-    <div className="max-w-full mx-auto inset-0 absolute">
+    <div className="max-w-full mx-auto inset-0 absolute overflow-hidden">
       <div className="relative aspect-[16/9] mb-8 overflow-hidden">
         <Image
           src={photo.urls.full}
@@ -76,18 +82,15 @@ export default function PhotoDetails({ photo, wallpapersCount }: { photo: Photo;
 
         <Content />
       </div>
-
       <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
         <div className="bg-black/80 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
           {wallpapersCount} wallpapers
         </div>
-        <button
-          onClick={handleSave}
-          className="bg-black/50 rounded-full p-2"
-        >
+        <button onClick={handleSave} className="bg-black/50 rounded-full p-2">
           <Save className="w-4 h-4" />
         </button>
       </div>
+      {/* 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
@@ -158,7 +161,7 @@ export default function PhotoDetails({ photo, wallpapersCount }: { photo: Photo;
             </dl>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
