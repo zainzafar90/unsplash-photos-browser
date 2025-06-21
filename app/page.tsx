@@ -15,7 +15,7 @@ export default async function Page(props: {
   const pageNum = parseInt(searchParams.page || "1", 10);
   const perPage = 30;
   const query =
-    searchParams.query || "vibrant coastal cliffs sunrise no people";
+    searchParams.query || "tranquil waterfall in lush greenery no buildings";
 
   try {
     const res = await fetch(
@@ -34,8 +34,8 @@ export default async function Page(props: {
     if (!res.ok) {
       console.log(res.status, res.headers);
       if (res.status === 403) {
-        const rateLimitRemaining = res.headers.get("x-ratelimit-remaining");
-        const rateLimitReset = res.headers.get("x-ratelimit-limit");
+        const rateLimitRemaining = res.headers.get("X-Ratelimit-Remaining");
+        const rateLimitReset = res.headers.get("X-Ratelimit-Reset");
         const resetTime = rateLimitReset
           ? new Date(parseInt(rateLimitReset) * 1000).toISOString()
           : "unknown";
@@ -65,6 +65,7 @@ export default async function Page(props: {
           initialWallpapers={wallpapersData.wallpapers}
           prevPage={getPage(links.prev)}
           nextPage={getPage(links.next)}
+          query={query}
         />
       </div>
     );
@@ -76,6 +77,7 @@ export default async function Page(props: {
         <PageContent
           initialPhotos={[]}
           initialWallpapers={[]}
+          query={query}
           error={
             error instanceof Error ? error.message : "Failed to load photos"
           }

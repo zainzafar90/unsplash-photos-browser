@@ -21,6 +21,7 @@ type PageContentProps = {
   initialWallpapers: Wallpaper[];
   prevPage?: number;
   nextPage?: number;
+  query?: string;
   error?: string;
 };
 
@@ -29,6 +30,7 @@ export function PageContent({
   initialWallpapers: wallpapers,
   prevPage,
   nextPage,
+  query,
   error,
 }: PageContentProps) {
   const [photos, setPhotos] = useState(initialPhotos);
@@ -38,7 +40,8 @@ export function PageContent({
     setIsLoading(true);
     const currentPhotos = photos;
     try {
-      const res = await fetch(`/api/photos?page=${page}`);
+      const queryParam = query ? `&query=${encodeURIComponent(query)}` : '';
+      const res = await fetch(`/api/photos?page=${page}${queryParam}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -71,7 +74,7 @@ export function PageContent({
       <div className="flex justify-between mt-6 max-w-sm mx-auto">
         {prevPage ? (
           <Link
-            href={`/?page=${prevPage}`}
+            href={`/?page=${prevPage}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
             onClick={() => handlePageChange(prevPage)}
             className={isLoading ? "opacity-50 pointer-events-none" : ""}
           >
@@ -82,7 +85,7 @@ export function PageContent({
         )}
         {nextPage ? (
           <Link
-            href={`/?page=${nextPage}`}
+            href={`/?page=${nextPage}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
             onClick={() => handlePageChange(nextPage)}
             className={isLoading ? "opacity-50 pointer-events-none" : ""}
           >
