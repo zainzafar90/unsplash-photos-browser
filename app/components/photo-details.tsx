@@ -52,6 +52,16 @@ export default function PhotoDetails({ photo }: { photo: Photo }) {
       console.error("Failed to save wallpaper:", error);
     }
   };
+
+  if (!photo?.urls?.raw)
+    return (
+      <div className="max-w-full mx-auto inset-0 absolute">
+        <div className="relative aspect-[16/9] mb-8 overflow-hidden">
+          No photo found
+        </div>
+      </div>
+    );
+
   return (
     <div className="max-w-full mx-auto inset-0 absolute">
       <div className="relative aspect-[16/9] mb-8 overflow-hidden">

@@ -17,7 +17,26 @@ export async function GET(request: Request) {
     );
 
     if (!res.ok) {
-      throw new Error("Failed to fetch photos");
+      if (res.status === 403) {
+        const rateLimitRemaining = res.headers.get("X-Ratelimit-Remaining");
+        const rateLimitReset = res.headers.get("X-Ratelimit-Reset");
+        const resetTime = rateLimitReset ? new Date(parseInt(rateLimitReset) * 1000).toISOString() : "unknown";
+        
+        return NextResponse.json(
+          { 
+            error: "Rate limit exceeded",
+            details: `Remaining: ${rateLimitRemaining}, Resets at: ${resetTime}`
+          },
+          { 
+            status: 429,
+            headers: {
+              "X-RateLimit-Remaining": rateLimitRemaining || "0",
+              "X-RateLimit-Reset": rateLimitReset || ""
+            }
+          }
+        );
+      }
+      throw new Error(`Unsplash API error: ${res.status} ${res.statusText}`);
     }
 
     const data = await res.json();
@@ -25,7 +44,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Failed to fetch photos:", error);
     return NextResponse.json(
-      { error: "Failed to fetch photos" },
+      { error: error instanceof Error ? error.message : "Failed to fetch photos" },
       { status: 500 }
     );
   }

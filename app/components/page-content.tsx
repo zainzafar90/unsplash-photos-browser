@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { PhotoGallery } from "./photo-gallery";
 
-type Photo = {
+export type Photo = {
   id: string;
-  urls: { small: string; raw: string };
+  urls: { small: string; raw: string; regular: string };
   alt_description: string | null;
   blur_hash?: string;
   user: { name: string; username: string };
@@ -21,6 +21,7 @@ type PageContentProps = {
   initialWallpapers: Wallpaper[];
   prevPage?: number;
   nextPage?: number;
+  error?: string;
 };
 
 export function PageContent({
@@ -28,6 +29,7 @@ export function PageContent({
   initialWallpapers: wallpapers,
   prevPage,
   nextPage,
+  error,
 }: PageContentProps) {
   const [photos, setPhotos] = useState(initialPhotos);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,10 +40,16 @@ export function PageContent({
     try {
       const res = await fetch(`/api/photos?page=${page}`);
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error + (data.details ? `: ${data.details}` : ""));
+      }
+
       setPhotos(data.results);
     } catch (error) {
       console.error("Failed to fetch photos:", error);
       setPhotos(currentPhotos);
+      alert(error instanceof Error ? error.message : "Failed to load photos");
     } finally {
       setIsLoading(false);
     }
@@ -49,6 +57,12 @@ export function PageContent({
 
   return (
     <div className="p-4">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 max-w-4xl mx-auto">
+          <p className="font-semibold">Error loading photos</p>
+          <p className="text-sm">{error}</p>
+        </div>
+      )}
       <PhotoGallery
         photos={photos}
         wallpapers={wallpapers}

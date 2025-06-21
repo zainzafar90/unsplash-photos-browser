@@ -2,14 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ImageCard } from "./image-card";
-
-type Photo = {
-  id: string;
-  urls: { small: string; regular: string; raw: string };
-  alt_description: string | null;
-  blur_hash?: string;
-  user: { name: string; username: string };
-};
+import { Photo } from "./page-content";
 
 type Wallpaper = {
   id: string;
