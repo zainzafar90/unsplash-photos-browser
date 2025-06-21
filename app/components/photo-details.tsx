@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Save } from "lucide-react";
+import { Content } from "./content";
 
 type Photo = {
   id: string;
@@ -52,10 +53,8 @@ export default function PhotoDetails({ photo }: { photo: Photo }) {
     }
   };
   return (
-    <div className="max-w-full mx-auto p-6">
-      <div className="mb-4"></div>
-
-      <div className="relative aspect-[16/9] mb-8 rounded-lg overflow-hidden">
+    <div className="max-w-full mx-auto inset-0 absolute">
+      <div className="relative aspect-[16/9] mb-8 overflow-hidden">
         <Image
           src={photo.urls.full}
           alt={photo.alt_description || "Photo"}
@@ -65,10 +64,15 @@ export default function PhotoDetails({ photo }: { photo: Photo }) {
           blurDataURL={photo.blur_hash}
         />
 
-        <button onClick={handleSave} className="absolute top-4 right-4">
-          <Save className="w-4 h-4" />
-        </button>
+        <Content />
       </div>
+
+      <button
+        onClick={handleSave}
+        className="fixed top-4 right-4 z-50 bg-black/50 rounded-full p-2"
+      >
+        <Save className="w-4 h-4" />
+      </button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
